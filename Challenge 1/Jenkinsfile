@@ -1,0 +1,25 @@
+def PASSWORD
+pipeline {
+    agent any
+    parameters {
+        string(name: 'LOGIN', defaultValue: '', description: 'Unique user identifier. Usually name and lastname')
+
+        string(name: 'NAME_LASTNAME', defaultValue: '', description: 'User Name and Lastname')
+
+        choice(name: 'GROUP_DEPARTMENT', choices: ['Contabilidad', 'Finanzas', 'Tecnologia'], description: '')
+    }
+    stages {
+        stage('Prod') {
+            steps {
+                    echo "Creating user with temporal password for ${params.NAME_LASTNAME}"
+                    PASSWORD=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 13; echo)
+                    sudo useradd -m ${params.LOGIN}
+                    echo ${PASSWORD} | sudo passwd ${params.LOGIN} --stding
+                    echo "Password created: ${PASSWORD}"
+                    sudo usermod -aG ${params.GROUP_DEPARTMENT} ${params.LOGIN}
+                    echo "Group added: ${GROUP_DEPARTMENT}"
+            }
+        }
+    }
+}
+
