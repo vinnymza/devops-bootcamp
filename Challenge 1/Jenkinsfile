@@ -1,4 +1,4 @@
-def PASSWORD
+def PASSWORD = sh(script: 'tr -dc A-Za-z0-9 </dev/urandom | head -c 13; echo', returnStdout: true).trim()
 pipeline {
     agent any
     parameters {
@@ -12,7 +12,6 @@ pipeline {
         stage('Prod') {
             steps {
                     echo "Creating user with temporal password for ${params.NAME_LASTNAME}"
-                    PASSWORD=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 13; echo)
                     sudo useradd -m ${params.LOGIN}
                     echo ${PASSWORD} | sudo passwd ${params.LOGIN} --stding
                     echo "Password created: ${PASSWORD}"
