@@ -26,8 +26,10 @@ pipeline {
         }
         stage('Add Group') {
             steps {
+                script{
                     sh(script: "sudo usermod -aG ${params.GROUP_DEPARTMENT} ${params.LOGIN}", returnStdout: true).trim()
                     echo "Group added: ${GROUP_DEPARTMENT}"
+                }
             }
         }
     }
