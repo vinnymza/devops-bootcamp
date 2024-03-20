@@ -1,3 +1,4 @@
+def PASSWORD
 pipeline {
     agent any
     parameters {
@@ -17,7 +18,7 @@ pipeline {
         stage('Add Password') {
             steps {
                 script{
-                    def PASSWORD = sh(script: 'tr -dc A-Za-z0-9 </dev/urandom | head -c 13; echo', returnStdout: true).trim()
+                    PASSWORD = sh(script: 'tr -dc A-Za-z0-9 </dev/urandom | head -c 13; echo', returnStdout: true).trim()
                     echo ${PASSWORD} | sudo passwd ${params.LOGIN} --stding
                     echo "Password created: ${PASSWORD}"
                 }
