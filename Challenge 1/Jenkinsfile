@@ -9,8 +9,8 @@ pipeline {
     stages {
         stage('Create User') {
             steps {
-                 echo "Creating user with temporal password for ${params.NAME_LASTNAME}"
-                sudo useradd -m "${params.LOGIN}"
+                echo "Creating user with temporal password for ${params.NAME_LASTNAME}"
+                useradd -m "${params.LOGIN}"
             }
         }
         stage('Add Password') {
@@ -24,7 +24,7 @@ pipeline {
         }
         stage('Add Group') {
             steps {
-                sudo usermod -aG "${params.GROUP_DEPARTMENT}" "${params.LOGIN}"
+                usermod -aG "${params.GROUP_DEPARTMENT}" "${params.LOGIN}"
                 echo "Group added: ${GROUP_DEPARTMENT}"
             }
         }
