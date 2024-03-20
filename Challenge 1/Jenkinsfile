@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script{
                     PASSWORD = sh(script: 'tr -dc A-Za-z0-9 </dev/urandom | head -c 13; echo', returnStdout: true).trim()
-                    sh(script: "echo ${PASSWORD} | sudo passwd --stdin ${params.LOGIN}", returnStdout: true).trim()
+                    sh(script: "echo ${PASSWORD} | sudo passwd ${params.LOGIN} --stdin", returnStdout: true).trim()
                     echo "Password created: ${PASSWORD}"
                 }
             }
