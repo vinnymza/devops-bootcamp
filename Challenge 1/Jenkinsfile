@@ -11,7 +11,7 @@ pipeline {
             steps {
                 script{
                     echo "Creating user with temporal password for ${params.NAME_LASTNAME}"
-                    sh(script: sudo useradd -m "${params.LOGIN}", returnStdout: true).trim()
+                    sh(script: "sudo useradd -m ${params.LOGIN}", returnStdout: true).trim()
                 }
             }
         }
@@ -19,14 +19,14 @@ pipeline {
             steps {
                 script{
                     PASSWORD = sh(script: 'tr -dc A-Za-z0-9 </dev/urandom | head -c 13; echo', returnStdout: true).trim()
-                    sh(script: echo "${PASSWORD}" | sudo passwd "${params.LOGIN}" --stding, returnStdout: true).trim()
+                    sh(script: "echo ${PASSWORD} | sudo passwd ${params.LOGIN} --stding", returnStdout: true).trim()
                     echo "Password created: ${PASSWORD}"
                 }
             }
         }
         stage('Add Group') {
             steps {
-                    sh(script: sudo usermod -aG "${params.GROUP_DEPARTMENT}" "${params.LOGIN}", returnStdout: true).trim()
+                    sh(script: "sudo usermod -aG ${params.GROUP_DEPARTMENT} ${params.LOGIN}", returnStdout: true).trim()
                     echo "Group added: ${GROUP_DEPARTMENT}"
                 }
             }
