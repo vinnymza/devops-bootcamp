@@ -1,4 +1,4 @@
-def PASSWORD
+def PASSWORD 
 pipeline {
     agent any
     parameters {
@@ -9,24 +9,27 @@ pipeline {
     stages {
         stage('Create User') {
             steps {
-                echo "Creating user with temporal password for ${params.NAME_LASTNAME}"
-                useradd -m ${params.LOGIN}
+                script{
+                    echo "Creating user with temporal password for ${params.NAME_LASTNAME}"
+                    sudo useradd -m "${params.LOGIN}"
+                }
             }
         }
         stage('Add Password') {
             steps {
                 script{
                     PASSWORD = sh(script: 'tr -dc A-Za-z0-9 </dev/urandom | head -c 13; echo', returnStdout: true).trim()
-                    echo ${PASSWORD} | sudo passwd ${params.LOGIN} --stding
+                    echo "${PASSWORD}" | sudo passwd "${params.LOGIN}" --stding
                     echo "Password created: ${PASSWORD}"
                 }
             }
         }
         stage('Add Group') {
             steps {
-
-                usermod -aG ${params.GROUP_DEPARTMENT} ${params.LOGIN}
-                echo "Group added: ${GROUP_DEPARTMENT}"
+                script{
+                    sudo usermod -aG "${params.GROUP_DEPARTMENT}" "${params.LOGIN}"
+                    echo "Group added: ${GROUP_DEPARTMENT}"
+                }
             }
         }
     }
