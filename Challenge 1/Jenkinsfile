@@ -1,11 +1,8 @@
-def PASSWORD = sh(script: 'tr -dc A-Za-z0-9 </dev/urandom | head -c 13; echo', returnStdout: true).trim()
 pipeline {
     agent any
     parameters {
         string(name: 'LOGIN', defaultValue: '', description: 'Unique user identifier. Usually name and lastname')
-
         string(name: 'NAME_LASTNAME', defaultValue: '', description: 'User Name and Lastname')
-
         choice(name: 'GROUP_DEPARTMENT', choices: ['Contabilidad', 'Finanzas', 'Tecnologia'], description: '')
     }
     stages {
@@ -20,6 +17,7 @@ pipeline {
         stage('Add Password') {
             steps {
                 script{
+                    def PASSWORD = sh(script: 'tr -dc A-Za-z0-9 </dev/urandom | head -c 13; echo', returnStdout: true).trim()
                     echo ${PASSWORD} | sudo passwd ${params.LOGIN} --stding
                     echo "Password created: ${PASSWORD}"
                 }
