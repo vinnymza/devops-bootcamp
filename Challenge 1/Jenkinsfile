@@ -20,18 +20,23 @@ pipeline {
                 script{
                     PASSWORD = sh(script: 'tr -dc A-Za-z0-9 </dev/urandom | head -c 13; echo', returnStdout: true).trim()
                     sh "echo -e ${PASSWORD}\n${PASSWORD} | sudo passwd -e ${params.LOGIN}"
-                    //sh "echo '${params.LOGIN}:${PASSWORD}' | sudo chpasswd -S"
                     echo "Password created: ${PASSWORD}"
-                    //sh "sudo passwd -e  ${params.LOGIN}"
-                    //echo "Password expirated. Change on next login"
                 }
             }
         }
         stage('Add Group') {
             steps {
                 script{
+                    def groupExists = sh(script: "getent group ${GROUP_DEPARTMENT}", returnStatus: true) == 0
+                    
+                    if (!groupExists) {
+                        echo "Group ${GROUP_DEPARTMENT} does not exist. Creating..."
+                        sh "sudo groupadd ${GROUP_DEPARTMENT}"
+                    }
+
                     sh(script: "sudo usermod -aG ${params.GROUP_DEPARTMENT} ${params.LOGIN}", returnStdout: true).trim()
                     echo "Group added: ${GROUP_DEPARTMENT}"
+
                 }
             }
         }
