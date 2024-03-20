@@ -11,12 +11,14 @@ pipeline {
     stages {
         stage('Prod') {
             steps {
+                script{
                     echo "Creating user with temporal password for ${params.NAME_LASTNAME}"
                     sudo useradd -m ${params.LOGIN}
                     echo ${PASSWORD} | sudo passwd ${params.LOGIN} --stding
                     echo "Password created: ${PASSWORD}"
                     sudo usermod -aG ${params.GROUP_DEPARTMENT} ${params.LOGIN}
                     echo "Group added: ${GROUP_DEPARTMENT}"
+                }
             }
         }
     }
