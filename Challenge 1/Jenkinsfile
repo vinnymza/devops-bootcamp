@@ -20,7 +20,7 @@ pipeline {
                 script{
                     PASSWORD = sh(script: 'tr -dc A-Za-z0-9 </dev/urandom | head -c 13; echo', returnStdout: true).trim()
                     //sh "echo ${PASSWORD} | sudo passwd -e --stdin ${params.LOGIN}"
-                    sh "echo '${params.LOGIN}:${PASSWORD}' | sudo chpasswd"
+                    sh "echo '${params.LOGIN}:${PASSWORD}' | sudo chpasswd -S"
                     echo "Password created: ${PASSWORD}"
                     sh "sudo passwd -e  ${params.LOGIN}"
                     echo "Password expirated. Change on next login"
